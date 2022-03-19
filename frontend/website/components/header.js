@@ -10,7 +10,7 @@ const Header = () => {
         <AppBar
         position="relative"
         elevation={3}
-        color = "secondary"
+        color = "primary"
       >
         <Toolbar sx={{ flexWrap: 'wrap' }}>
           <Typography variant="h6" color="white" noWrap sx={{ flexGrow: 1 }}>

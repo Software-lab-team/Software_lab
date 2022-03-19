@@ -1,5 +1,12 @@
 import Header from '../components/header'
+import InputFieldsCreate from '../components/createProjectsFields'
 import React, { useState } from 'react';
+import Grid from '@mui/material/Grid';
+import InputFieldsJoin from '../components/joinProjectFields'
+import InputFieldsDelete from '../components/deleteProjectsFields'
+import ProjectList from '../components/listProjects'
+import Typography from '@mui/material/Typography'
+import Paper from '@mui/material/Paper'
 
 /*
 //Function to do the API call
@@ -60,6 +67,23 @@ export default function Home(){
   return(
     <div>
       <Header />
+      <Grid container component="main">
+        <Grid item xs={12}>
+        <Typography component="h1" variant="h4" sx={{margin : 5}}>
+                My Projects
+        </Typography>
+          <ProjectList />
+        </Grid>
+          <Grid item xs={4}>
+          <InputFieldsCreate />
+          </Grid>
+        <Grid item xs={4}>
+          <InputFieldsJoin />
+        </Grid>
+        <Grid item xs={4}>
+        <InputFieldsDelete />
+        </Grid>
+      </Grid>
     </div>
   )
 }
