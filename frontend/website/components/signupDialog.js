@@ -8,73 +8,43 @@ import InputAdornment from '@mui/material/InputAdornment';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import { useState } from 'react';
+import { signIn } from "next-auth/react";
 
 const Signup = (props) => {
-	const [user, setUser] = useState({
-		value: '',
-		error: false,
-		alert: false,
-	});
+	const [showPass, setShowPass] = useState(false);
   
-	const [pass, setPass] = useState({
-		value: '',
-		error: false,
-		showPass: false,
-	});
-  
-	const [signup, setSignup] = useState(false);
-  
-	const handleSubmit = (event) => {
-		setUser({...user, error: false, alert: false});
-		setPass({...pass, error: false});
-	
-		if(!user.value) {
-			setUser({...user, error: true});
-			event.preventDefault();
-		} else if(user.value === "user" && pass.value) {
-			setUser({...user, error: true, alert: true});
-			event.preventDefault();
-		}
-	
-		if(!pass.value) {
-			setPass({...pass, error: true});
-			event.preventDefault();
-		}
+	const handleSubmit = async (event) => {
+		const data = new FormData(event.currentTarget);
+		const username = data.get('username');
+		const password = data.get('password');
+
+		const response = await signIn("signup", { callbackUrl: `${window.location.origin}/resources`, redirect: false, username: username, password: password });
 	};
 
 	const handleShowPass = () => {
-		setPass({...pass, showPass: !pass.showPass});
+		setShowPass(!showPass);
 	};
   
-	const {open, onClose} = props;
-  
-	const close = () => {
-		onClose();
-		setUser({value: '', error: false, alert: false});
-		setPass({...pass, value: '', error: false});
-	}
+	const {open, onClose, csrfToken} = props;
 	
 	return (
-		<Dialog open={open} onClose={close} component="form" validate sx={{ mt: 1 }}>
+		<Dialog open={open} onClose={onClose} component="form" onSubmit={handleSubmit} method="post" action="/api/auth/callback/signup" noValidate sx={{ mt: 1 }}>
 			<DialogTitle component="h1" variant="h5">
 				Sign up
 			</DialogTitle>
 			<DialogContent>
+				<input name="csrfToken" type="hidden" defaultValue={csrfToken} />
 				<TextField
-					onChange={(event) => setUser({...user, value: event.target.value})}
-					error={user.error}
 					margin="normal"
 					required
 					fullWidth
 					id="username"
-					label={user.alert? "Username already exists" : "Username"}
+					label="Username"
 					name="username"
 					autoComplete="username"
 					autoFocus
 				/>
 				<TextField
-					onChange={(event) => setPass({...pass, value: event.target.value})}
-					error={pass.error}
 					margin="normal"
 					required
 					fullWidth
@@ -82,7 +52,7 @@ const Signup = (props) => {
 					label="Password"
 					id="password"
 					autoComplete="current-password"
-					type={pass.showPass ? "text" : "password"}
+					type={showPass ? "text" : "password"}
 					InputProps={{
 						endAdornment: (
 							<InputAdornment position="end">
@@ -91,15 +61,13 @@ const Signup = (props) => {
 									onClick={handleShowPass}
 									edge="end"
 								>
-									{pass.showPass ? <Visibility /> : <VisibilityOff />}
+									{showPass ? <Visibility /> : <VisibilityOff />}
 								</IconButton>
 							</InputAdornment>
 						),
 					}}
 				/>
 				<Button
-					onClick={handleSubmit}
-					href="/resources"
 					type="submit"
 					fullWidth
 					variant="contained"

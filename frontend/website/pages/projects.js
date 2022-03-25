@@ -7,6 +7,7 @@ import InputFieldsDelete from '../components/deleteProjectsFields'
 import ProjectList from '../components/listProjects'
 import Typography from '@mui/material/Typography'
 import Paper from '@mui/material/Paper'
+import { getSession } from 'next-auth/react'
 
 /*
 //Function to do the API call
@@ -86,6 +87,23 @@ export default function Home(){
       </Grid>
     </div>
   )
+}
+
+export async function getServerSideProps(context) {
+  const session = await getSession(context)
+
+  if (!session) {
+    return {
+      redirect: {
+        destination: '/auth/signin',
+        permanent: false,
+      },
+    }
+  }
+
+  return {
+    props: { session }
+  }
 }
 
 

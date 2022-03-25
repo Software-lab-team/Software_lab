@@ -5,13 +5,12 @@ import TableCell from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
-import TextField from '@mui/material/TextField';
-import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import Paper from '@mui/material/Paper';
 import { useState } from 'react';
 import CreateResource from '../components/createResource';
 import ResourceStepper from '../components/resourceStepper';
+import { getSession } from 'next-auth/react';
 
 export default function Home(){
 	const [name, setName] = useState({
@@ -123,3 +122,20 @@ export default function Home(){
 		</div>
 	);
 }
+
+export async function getServerSideProps(context) {
+	const session = await getSession(context)
+  
+	if (!session) {
+	  return {
+		redirect: {
+		  destination: '/auth/signin',
+		  permanent: false,
+		},
+	  }
+	}
+  
+	return {
+	  props: { session }
+	}
+  }

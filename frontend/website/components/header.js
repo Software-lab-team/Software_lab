@@ -4,6 +4,7 @@ import Typography from '@mui/material/Typography';
 import Link from '@mui/material/Link';
 import Toolbar from '@mui/material/Toolbar';
 import Button from '@mui/material/Button';
+import { signOut } from 'next-auth/react';
 
 const Header = () => {
     return(
@@ -45,7 +46,7 @@ const Header = () => {
               Datasets
             </Link>
           </nav>
-          <Button href="#" variant="outlined" sx={{ my: 1, mx: 1.5 }}>
+          <Button onClick={() => signOut({callbackUrl: `${window.location.origin}`})} variant="outlined" sx={{ "&.MuiButton-outlined": { color: "#fff", border: "1px white solid" }, my: 1, mx: 1.5 }}>
             Logout
           </Button>
         </Toolbar>
