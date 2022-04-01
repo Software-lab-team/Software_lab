@@ -15,7 +15,7 @@ def home():
     var2 = request.args.get('var2')
     return "this calls a func in users " + var1 + var2
 
-#/Users/get-users?userName=User1&password=UserPassword
+#/Users/get-user?userName=User1&password=UserPassword
 @Users.route("/Users/get-user", methods=['GET'])
 def get_user():
     username = request.args.get('userName')
@@ -23,6 +23,7 @@ def get_user():
     # Some encrypting algorithm from the front end before querying in the URI
     password = request.args.get('password')
     wanted_user = userCollection.find_one({'userName': username})
+    # print(wanted_user)
     if wanted_user:
         if wanted_user['password'] == password:
             resp = dumps(wanted_user)
@@ -96,6 +97,7 @@ def put_new_project():
                 print(userAdded)
                 del userAdded['_id']
 
+                print(type({'result': userAdded}))
                 return jsonify({'result': userAdded})
 
 

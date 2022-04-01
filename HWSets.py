@@ -1,4 +1,3 @@
-from os import abort
 from flask import Flask, jsonify, request, Blueprint
 from pymongo import MongoClient
 
