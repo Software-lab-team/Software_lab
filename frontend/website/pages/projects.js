@@ -71,7 +71,7 @@ export default function Home(){
       <Grid container component="main">
         <Grid item xs={12}>
         <Typography component="h1" variant="h4" sx={{margin : 5}}>
-                My Projects
+                My Projects, testing
         </Typography>
           <ProjectList />
         </Grid>
