@@ -29,6 +29,7 @@ def addHWSet():
     capacity = request.args.get('capacity', type=int)
     if hwCol.count_documents({'name': name}, limit=1) != 0:
         return 'Error: HWSet already exists', 400
+    
     article = {
         "name": name,
         "capacity": capacity,
@@ -39,5 +40,13 @@ def addHWSet():
     articleAdded = hwCol.find_one({'name': name})
     print(articleAdded)
     del articleAdded['_id']
-
     return jsonify({'result': articleAdded})
+
+#/HWSets?name=HWSet1
+@HWSets.route('/HWSets', methods=['DELETE']) # Note: does not check if name exists
+def delHWSet():
+    name = request.args.get('name', type=str)
+    articleAdded = hwCol.find_one({'name': name})
+    del articleAdded['_id'] 
+    hwCol.delete_one({'name': name}) 
+    return jsonify({'result deleted': articleAdded})
