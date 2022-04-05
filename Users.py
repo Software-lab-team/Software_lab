@@ -15,6 +15,12 @@ projectCollection = db.Projects
 #     var2 = request.args.get('var2')
 #     return "this calls a func in users " + var1 + var2
 
+@Users.route("/Users/get-password", methods=['GET'])
+def get_password_from_userID() -> str:
+    username = request.args.get('userName')
+    user = userCollection.find_one({'userName': username})
+    return user['password']
+
 #/Users/get-user?userName=User1&password=UserPassword
 @Users.route("/Users", methods=['GET'])
 def get_user():
