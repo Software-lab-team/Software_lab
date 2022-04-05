@@ -15,13 +15,14 @@ projectCollection = db.Projects
 #     var2 = request.args.get('var2')
 #     return "this calls a func in users " + var1 + var2
 
+#Users/get-password?userName=Bryan
 @Users.route("/Users/get-password", methods=['GET'])
 def get_password_from_userID() -> str:
     username = request.args.get('userName')
     user = userCollection.find_one({'userName': username})
     return user['password']
 
-#/Users/get-user?userName=User1&password=UserPassword
+#/Users?userName=Bryan&password=Jeong
 @Users.route("/Users", methods=['GET'])
 def get_user():
     username = request.args.get('userName')
@@ -40,7 +41,7 @@ def get_user():
     else:
         return "The userName is not valid", 400
 
-#Users/get-associated-projects?userName=User1
+#Users/get-projects?userName=Bryan
 @Users.route("/Users/get-projects", methods=['GET'])
 def get_associated_projects():
     username = request.args.get('userName')
@@ -53,8 +54,8 @@ def get_associated_projects():
         return "The User was not found", 400
 
 
-#Users/create-user?userName=newUser&password=newPassword
-@Users.route("/Users/create-user", methods=['POST'])
+#/Users?userName=newUser&password=newPassword
+@Users.route("/Users", methods=['POST'])
 def post_new_user():
     username = request.args.get("userName")
     password = request.args.get("password")
@@ -77,9 +78,9 @@ def post_new_user():
         return jsonify({'result': articleAdded})
 
 
-#Users/update-user?userName&projectID
+#/Users/update-user?userName=Bryan&projectID=1
 @Users.route("/Users/update-user", methods=['POST'])
-def put_new_project():
+def post_new_project():
     username = request.args.get('userName')
     projectID = request.args.get('projectID')
     user = userCollection.find_one({"userName": username})

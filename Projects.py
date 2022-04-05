@@ -22,7 +22,7 @@ class Project:
 #     var2 = request.args.get('var2')
 #     return "this calls a func in projects " + var1 + var2
 
-#/Projects?projectID=1&checkIn=1&HWSet=HWSet1&number=20
+#/Projects?projectID=1&checkIn=1&HWSet=1&number=20
 @Projects.route("/Projects", methods=['PUT'])
 def updateProjectSetByID():
     projectID = request.args.get('projectID', type=str)
@@ -114,7 +114,7 @@ def getProjectSetByID():
     resp = dumps(receivedProject)
     return resp
 
-#/Projects?projectID=2&projectName=SecondProject&Description=the-second-project
+#/Projects?projectID=2&projectName=SecondProject&projectDescription=the-second-project
 @Projects.route("/Projects", methods = ['POST'])
 def addProjectSet():
     projectID = request.args.get('projectID', type=str)
@@ -142,6 +142,7 @@ def addProjectSet():
 
     return jsonify({'result': articleAdded})
 
+#/Projects?projectID=1
 @Projects.route("/Projects", methods = ['DELETE'])
 def deleteProjectSet():
     projectID = request.args.get('projectID', type=str)
