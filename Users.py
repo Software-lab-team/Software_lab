@@ -8,15 +8,22 @@ client = MongoClient('mongodb+srv://secure-username:secure-password@cluster0.di8
 db = client.Main
 userCollection = db.Users
 projectCollection = db.Projects
-#/Users?var1=mark&var2=liao
-@Users.route("/Users")
-def home():
-    var1 = request.args.get('var1')
-    var2 = request.args.get('var2')
-    return "this calls a func in users " + var1 + var2
+# #/Users?var1=mark&var2=liao
+# @Users.route("/Users")
+# def home():
+#     var1 = request.args.get('var1')
+#     var2 = request.args.get('var2')
+#     return "this calls a func in users " + var1 + var2
 
-#/Users/get-user?userName=User1&password=UserPassword
-@Users.route("/Users/get-user", methods=['GET'])
+#Users/get-password?userName=Bryan
+@Users.route("/Users/get-password", methods=['GET'])
+def get_password_from_userID() -> str:
+    username = request.args.get('userName')
+    user = userCollection.find_one({'userName': username})
+    return user['password']
+
+#/Users?userName=Bryan&password=Jeong
+@Users.route("/Users", methods=['GET'])
 def get_user():
     username = request.args.get('userName')
 
@@ -34,18 +41,21 @@ def get_user():
     else:
         return "The userName is not valid", 400
 
-#Users/get-associated-projects?userName=User1
-@Users.route("/Users/get-associated-projects", methods=['GET'])
+#Users/get-projects?userName=Bryan
+@Users.route("/Users/get-projects", methods=['GET'])
 def get_associated_projects():
     username = request.args.get('userName')
     user = userCollection.find_one({'userName': username})
     if user:
-        return userCollection['associatedProjects']
+        resp = dumps(user['associatedProjects'])
+        return resp
+
     else:
         return "The User was not found", 400
 
-#Users/create-user?userName=newUser&password=newPassword
-@Users.route("/Users/create-user", methods=['POST', 'GET'])
+
+#/Users?userName=newUser&password=newPassword
+@Users.route("/Users", methods=['POST'])
 def post_new_user():
     username = request.args.get("userName")
     password = request.args.get("password")
@@ -67,9 +77,10 @@ def post_new_user():
 
         return jsonify({'result': articleAdded})
 
-#Users/update-user?userName&projectID
-@Users.route("/Users/update-user", methods=['POST', 'GET'])
-def put_new_project():
+
+#/Users/update-user?userName=Bryan&projectID=1
+@Users.route("/Users/update-user", methods=['POST'])
+def post_new_project():
     username = request.args.get('userName')
     projectID = request.args.get('projectID')
     user = userCollection.find_one({"userName": username})
@@ -98,7 +109,9 @@ def put_new_project():
                 del userAdded['_id']
 
                 print(type({'result': userAdded}))
-                return jsonify({'result': userAdded})
+                resp = dumps(userAdded)
+                return resp
+
 
 
 
