@@ -6,7 +6,11 @@ import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import { useState } from "react";
 
-const SigninForm = ({ type }) => {
+const SigninForm = (props) => {
+  const { type, emptyFields } = props;
+
+  const [user, setUser] = useState("");
+  const [pass, setPass] = useState("");
   const [showPass, setShowPass] = useState(false);
 
   const handleShowPass = () => {
@@ -16,6 +20,9 @@ const SigninForm = ({ type }) => {
   return (
     <div>
       <TextField
+        error={emptyFields && !user}
+        onChange={(event) => setUser(event.target.value)}
+        value={user}
         margin="normal"
         required
         fullWidth
@@ -26,6 +33,8 @@ const SigninForm = ({ type }) => {
         autoFocus
       />
       <TextField
+        error={emptyFields && !pass}
+        onChange={(event) => setPass(event.target.value)}
         margin="normal"
         required
         fullWidth

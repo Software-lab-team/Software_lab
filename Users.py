@@ -20,7 +20,10 @@ projectCollection = db.Projects
 def get_password_from_userID() -> str:
     username = request.args.get('userName')
     user = userCollection.find_one({'userName': username})
-    return user['password']
+    if user:
+        return dumps(user)
+    else:
+        return "The userName is not valid", 400
 
 #/Users?userName=Bryan&password=Jeong
 @Users.route("/Users", methods=['GET'])
@@ -31,15 +34,11 @@ def get_user():
     password = request.args.get('password')
     wanted_user = userCollection.find_one({'userName': username})
     # print(wanted_user)
-    if wanted_user:
-        if wanted_user['password'] == password:
-            resp = dumps(wanted_user)
-            return resp
-        else:
-            return "The password is not correct", 404
-
+    if wanted_user['password'] == password:
+        resp = dumps(wanted_user)
+        return resp
     else:
-        return "The userName is not valid", 400
+        return "The password is not correct", 404
 
 #Users/get-projects?userName=Bryan
 @Users.route("/Users/get-projects", methods=['GET'])

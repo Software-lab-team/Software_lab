@@ -11,59 +11,97 @@ import SelectHWSet from "../components/selectHwset";
 import CheckResources from "../components/checkResources";
 import { useState } from "react";
 
-const ResourceStepper = () => {
-  const [project, setProject] = useState({
-    value: "",
-    error: false,
-  });
+const ResourceStepper = (props) => {
+  const { hwsets, setHwsets } = props;
 
-  const [hwset, setHwset] = useState({
-    value: "",
-    error: false,
-  });
+  const [project, setProject] = useState({ projectName: "" });
+
+  const [hwset, setHwset] = useState({ name: "" });
 
   const [check, setCheck] = useState({
-    direction: "",
-    amount: "",
-    error: false,
+    checkIn: "",
+    number: 1,
   });
+
+  const [error, setError] = useState(false);
 
   const steps = [
     {
       label: "Select a Project",
-      form: <SelectProject project={project} setProject={setProject} />,
+      form: (
+        <SelectProject
+          project={project}
+          setProject={setProject}
+          error={error}
+        />
+      ),
     },
     {
       label: "Select a HWSet",
-      form: <SelectHWSet hwset={hwset} setHwset={setHwset} />,
+      form: (
+        <SelectHWSet
+          hwsets={hwsets}
+          hwset={hwset}
+          setHwset={setHwset}
+          error={error}
+        />
+      ),
     },
     {
       label: "Check-in/Checkout Resources",
-      form: <CheckResources check={check} setCheck={setCheck} />,
+      form: (
+        <CheckResources
+          project={project}
+          hwset={hwset}
+          check={check}
+          setCheck={setCheck}
+          error={error}
+        />
+      ),
     },
   ];
 
   const [activeStep, setActiveStep] = useState(0);
 
-  const handleNext = () => {
-    setProject({ ...project, error: false });
-    setHwset({ ...hwset, error: false });
-    setCheck({ ...check, error: false });
-
-    if (activeStep === 0 && !project.value) {
-      setProject({ ...project, error: true });
-    } else if (activeStep === 1 && !hwset.value) {
-      setHwset({ ...hwset, error: true });
-    } else if (activeStep === 2 && (!check.direction || !check.amount)) {
-      if (!check.direction) {
-        setCheck({ ...check, error: true });
+  const handleNext = async () => {
+    setError(false);
+    if (activeStep === 0 && !project.projectName) {
+      setError(true);
+      return;
+    } else if (activeStep === 1 && !hwset.name) {
+      setError(true);
+      return;
+    } else if (activeStep === 2) {
+      if (!check.checkIn || !check.number) {
+        setError(true);
+        return;
+      } else {
+        const res = await fetch(
+          "http://127.0.0.1:5000/Projects?projectID=" +
+            project.projectID +
+            "&checkIn=" +
+            check.checkIn +
+            "&HWSet=" +
+            hwset.name +
+            "&number=" +
+            check.number,
+          { method: "PUT" }
+        ).then((response) => {
+          if (response.ok) {
+            return response.json();
+          }
+          return response.text();
+        });
+        if (typeof res === "string") {
+          setError(res);
+          return;
+        }
+        await fetch("http://127.0.0.1:5000/HWSets")
+          .then((response) => response.json())
+          .then((data) => setHwsets(data.result));
       }
-      if (!check.amount) {
-        setCheck({ ...check, error: true });
-      }
-    } else {
-      setActiveStep((prevActiveStep) => prevActiveStep + 1);
     }
+    setActiveStep((prevActiveStep) => prevActiveStep + 1);
   };
 
   const handleBack = () => {
@@ -71,6 +109,15 @@ const ResourceStepper = () => {
   };
 
   const handleReset = () => {
+    setProject({ projectName: "" });
+
+    setHwset({ name: "" });
+
+    setCheck({
+      checkIn: "",
+      number: "",
+    });
+
     setActiveStep(0);
   };
 
@@ -111,7 +158,9 @@ const ResourceStepper = () => {
         {activeStep === steps.length && (
           <Paper square elevation={0} sx={{ p: 3 }}>
             <Typography>
-              Successfully checked {check.direction} resources
+              {project.projectName} successfully checked{" "}
+              {check.checkIn > 0 ? "in" : "out"} {check.number} resources from{" "}
+              {hwset.name}
             </Typography>
             <Button onClick={handleReset} sx={{ mt: 1, mr: 1 }}>
               Reset

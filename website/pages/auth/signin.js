@@ -7,24 +7,33 @@ import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import Alert from "@mui/material/Alert";
 import { useState } from "react";
-import { signIn, getCsrfToken } from "next-auth/react";
+import { signIn } from "next-auth/react";
 import { useRouter } from "next/router";
+import { getSession } from "next-auth/react";
 
 //This is the landing page of the website. Can be the login page
 
-export default function SignIn({ csrfToken }) {
+export default function SignIn() {
   const [signup, setSignup] = useState(false);
+  const [emptyFields, setEmptyFields] = useState(false);
 
   const { error } = useRouter().query;
 
   const handleSubmit = async (event) => {
+    event.preventDefault();
+    setEmptyFields(false);
+
     const data = new FormData(event.currentTarget);
     const username = data.get("username");
     const password = data.get("password");
 
-    const response = await signIn("signin", {
+    if (!username || !password) {
+      setEmptyFields(true);
+      return;
+    }
+
+    await signIn("signin", {
       callbackUrl: `${window.location.origin}/resources`,
-      redirect: false,
       username: username,
       password: password,
     });
@@ -38,11 +47,6 @@ export default function SignIn({ csrfToken }) {
     setSignup(false);
   };
 
-  const errors = {
-    invalid_signin: "Invalid username or password",
-    invalid_signup: "Username already exists",
-  };
-
   return (
     <div className={styles.container}>
       <Head>
@@ -54,31 +58,32 @@ export default function SignIn({ csrfToken }) {
         <Typography component="h1" variant="h5">
           Sign in
         </Typography>
-        <Box
-          component="form"
-          onSubmit={handleSubmit}
-          method="post"
-          action="/api/auth/callback/signin"
-          noValidate
-          sx={{ mt: 1 }}
-        >
-          <input name="csrfToken" type="hidden" defaultValue={csrfToken} />
-          <SigninForm type="Sign In" />
+        <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
+          <SigninForm type="Sign In" emptyFields={emptyFields} />
           <Button variant="text" onClick={handleOpen}>
             {"Don't have an account? Sign Up"}
           </Button>
-          <Signup open={signup} onClose={handleClose} csrfToken={csrfToken} />
-          {error && <Alert severity="error">{errors[error]}</Alert>}
+          {error && <Alert severity="error">{error}</Alert>}
         </Box>
+        <Signup open={signup} onClose={handleClose} />
       </main>
     </div>
   );
 }
 
 export async function getServerSideProps(context) {
+  const session = await getSession(context);
+
+  if (!session) {
+    return {
+      props: {},
+    };
+  }
+
   return {
-    props: {
-      csrfToken: await getCsrfToken(context),
+    redirect: {
+      destination: "/resources",
+      permanent: false,
     },
   };
 }

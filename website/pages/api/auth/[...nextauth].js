@@ -23,17 +23,48 @@ export default NextAuth({
         // e.g. return { id: 1, name: 'J Smith', email: 'jsmith@example.com' }
         // You can also use the `req` object to obtain additional parameters
         // (i.e., the request IP address)
-        if (
-          credentials.username === "user" &&
-          credentials.password === "pass"
-        ) {
-          return {
-            id: 1,
-            name: "user",
-          };
-        }
+        const hash = await fetch(
+          "http://127.0.0.1:5000/Users/get-password?userName=" +
+            credentials.username
+        )
+          .then((response) => {
+            if (response.ok) {
+              return response.json();
+            }
+            return response.text();
+          })
+          .then((data) => {
+            if (typeof data === "string") {
+              throw new Error(data);
+            }
+            return data.password;
+          });
 
-        throw new Error("invalid_signin");
+        const bcrypt = require("bcryptjs");
+        const password = (await bcrypt.compare(credentials.password, hash))
+          ? hash
+          : credentials.password;
+
+        const res = await fetch(
+          "http://127.0.0.1:5000/Users?userName=" +
+            credentials.username +
+            "&password=" +
+            password
+        )
+          .then((response) => {
+            if (response.ok) {
+              return response.json();
+            }
+            return response.text();
+          })
+          .then((data) => {
+            if (typeof data === "string") {
+              throw new Error(data);
+            }
+            return data;
+          });
+
+        return res;
       },
     }),
     CredentialsProvider({
@@ -55,18 +86,47 @@ export default NextAuth({
         // e.g. return { id: 1, name: 'J Smith', email: 'jsmith@example.com' }
         // You can also use the `req` object to obtain additional parameters
         // (i.e., the request IP address)
-        if (credentials.username === "user") {
-          throw new Error("invalid_signup");
-        }
+        const bcrypt = require("bcryptjs");
+        const hash = await bcrypt.hash(credentials.password, 10);
 
-        return {
-          id: 1,
-          name: credentials.username,
-        };
+        const res = await fetch(
+          "http://127.0.0.1:5000/Users?userName=" +
+            credentials.username +
+            "&password=" +
+            hash,
+          { method: "POST" }
+        )
+          .then((response) => {
+            if (response.ok) {
+              return response.json();
+            }
+            return response.text();
+          })
+          .then((data) => {
+            if (typeof data === "string") {
+              throw new Error(data);
+            }
+            return data;
+          });
+
+        return res;
       },
     }),
   ],
-  secret: "hi:",
+  secret: process.env.SECRET,
+  callbacks: {
+    async jwt({ user, token, account }) {
+      if (account) {
+        token = user;
+      }
+      return token;
+    },
+    async session({ session, token, user }) {
+      // Send properties to the client, like an access_token from a provider.
+      session = token.result || token;
+      return session;
+    },
+  },
   pages: {
     signIn: "/auth/signin",
     signOut: "/auth/signin",

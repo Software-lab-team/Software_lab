@@ -47,11 +47,9 @@ def updateProjectSetByID():
     if hwSet not in list_of_hw_set_names:
         return f'There is no HW set with name + {hwSet}', 400
 
-    if not checkedOutSets:
+    if hwSet not in checkedOutSets:
         # Have to add the HW Set to the project
-        add_hw_set_dict = {
-            hwSet: 0
-        }
+        add_hw_set_dict = checkedOutSets
         project_hw_sets = 0
     else:
         add_hw_set_dict = checkedOutSets
@@ -63,7 +61,7 @@ def updateProjectSetByID():
     hardware_object = hwCollection.find_one({"name": hwSet})
     # If we want to check out sets from HW Set to the project
 
-    if checkIn == 1:
+    if checkIn == -1:
         if numberOfSets > hardware_object['availability']:
             return "Error: the number of sets you want to check out is larger than the current available amount", 400
 
@@ -73,7 +71,7 @@ def updateProjectSetByID():
 
     # If we want to check in sets from Project to the HW Set
 
-    elif checkIn == -1:
+    elif checkIn == 1:
         if numberOfSets > project_hw_sets:
             return "Error: the number of sets you want to check in is larger than the current available amount in the project", 400
 

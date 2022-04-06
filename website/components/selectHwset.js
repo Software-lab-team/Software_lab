@@ -4,27 +4,33 @@ import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 
 const SelectHWSet = (props) => {
-  const { hwset, setHwset } = props;
+  const { hwsets, hwset, setHwset, error } = props;
 
   const handleChange = (event) => {
-    setHwset({ ...hwset, value: event.target.value });
+    setHwset(event.target.value);
   };
 
   return (
     <div>
-      <FormControl sx={{ margin: 1, minWidth: 120 }}>
+      <FormControl
+        sx={{ margin: 1, minWidth: 120 }}
+        error={error && !hwset.name}
+      >
         <InputLabel id="demo-simple-select-helper-label">HWSet</InputLabel>
         <Select
-          error={hwset.error}
           labelId="demo-simple-select-helper-label"
           id="demo-simple-select-helper"
-          value={hwset.value}
           label="HWSet"
           onChange={handleChange}
+          defaultValue=""
         >
-          <MenuItem value={"HWSet1"}>HWSet1</MenuItem>
-          <MenuItem value={"HWSet2"}>HWSet2</MenuItem>
-          <MenuItem value={"HWSet3"}>HWSet3</MenuItem>
+          {hwsets.map((hwset, i) => {
+            return (
+              <MenuItem key={hwset.name} value={hwset}>
+                {hwset.name}
+              </MenuItem>
+            );
+          })}
         </Select>
       </FormControl>
     </div>
