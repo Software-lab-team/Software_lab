@@ -14,19 +14,30 @@ import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import Paper from '@mui/material/Paper';
 
-
+//waiting on backend to implement the user stuff
 
 const InputFieldsJoin = () => {
     const handleSubmit = (event) => {
         event.preventDefault();
         const data = new FormData(event.currentTarget);
-        console.log({
-          email: data.get('email'),
-          password: data.get('password'),
-        });
+        const url = "http://127.0.0.1:5000/Projects?userName=" + "Bryan" + "&projectID=" + data.get('id') 
+        joinProject(url)
       };
       const theme = createTheme()
     
+      const joinProject = async(url) => {
+        const requestOptions = {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ title: 'React POST Request Example' })
+      };
+      const req = await fetch(url, requestOptions)
+      const new_data = await req.json()
+      console.log(new_data)
+      }
+
+
+
       return (
         <ThemeProvider theme={theme}>
           <Container component="main" maxWidth="xs">

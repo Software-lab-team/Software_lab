@@ -7,16 +7,20 @@ import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
 
 //Have an array as input, and create the corresponding list iteratively with primary being the element in the array
-const ProjectList = () => {
+
+
+
+const ProjectList = ({data}) => {
+    const text = "Hello"
     return(
         <Paper elevation={3} sx={{margin : 5}}>
             <List>
                 <ListItem>
-                    <ListItemText primary="Test"/>
+                    <ListItemText primary={data.projectName}/>
                 </ListItem>
                 <Divider />
                 <ListItem>
-                    <ListItemText primary="Test"/>
+                    <ListItemText primary={data.projectName}/>
                 </ListItem>
             </List>
         </Paper>

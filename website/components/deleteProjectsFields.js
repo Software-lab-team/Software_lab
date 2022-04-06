@@ -20,12 +20,21 @@ const InputFieldsDelete = () => {
     const handleSubmit = (event) => {
         event.preventDefault();
         const data = new FormData(event.currentTarget);
-        console.log({
-          email: data.get('email'),
-          password: data.get('password'),
-        });
+        const url = "http://127.0.0.1:5000/Projects?projectID=" + data.get("id")
+        deleteProjects(url)
       };
+      
       const theme = createTheme()
+
+      const deleteProjects = async(url) => {
+        const requestOptions = {
+          method: 'DELETE',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ title: 'React POST Request Example' })
+      };
+        const req = await fetch(url, requestOptions)
+        console.log(req.status)
+      }
     
       return (
         <ThemeProvider theme={theme}>

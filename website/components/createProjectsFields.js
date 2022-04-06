@@ -15,16 +15,25 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 
 
 
-
 const InputFieldsCreate = () => {
     const handleSubmit = (event) => {
         event.preventDefault();
         const data = new FormData(event.currentTarget);
-        console.log({
-          email: data.get('email'),
-          password: data.get('password'),
-        });
+        const url = "http://127.0.0.1:5000/Projects?projectID=" + data.get('id') + "&projectName=" + data.get('name') + "&projectDescription=" + data.get('description')
+        createProject(url)
       };
+
+      const createProject = async(url) => {
+        const requestOptions = {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ title: 'React POST Request Example' })
+      };
+        const req = await fetch(url, requestOptions)
+        const new_data = await req.json()
+        console.log(new_data)
+      }
+
       const theme = createTheme()
     
       return (

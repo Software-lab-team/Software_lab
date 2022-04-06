@@ -9,20 +9,20 @@ import Typography from '@mui/material/Typography'
 import Paper from '@mui/material/Paper'
 import { getSession } from 'next-auth/react'
 
-/*
+
 //Function to do the API call
 export const getStaticProps = async () =>{
 
-  const res = await fetch('https://jsonplaceholder.typicode.com/users') 
+  const res = await fetch('http://127.0.0.1:5000/Projects?projectID=1') 
   const data = await res.json()
-
+  console.log(data)
   return {
     props: {users : data}
   }
 
 }
 
-
+/*
 
 
 //Receives the api information under props. In this case, I diconstructed the props thing so that I only have to recieve the data. 
@@ -64,7 +64,10 @@ export default function Home({users}){
 */
 
 
-export default function Home(){
+export default function Home({users}){
+
+  const [data, setData] = useState(users)
+
   return(
     <div>
       <Header />
@@ -73,7 +76,7 @@ export default function Home(){
         <Typography component="h1" variant="h4" sx={{margin : 5}}>
                 My Projects, testing
         </Typography>
-          <ProjectList />
+          <ProjectList data={data}/>
         </Grid>
           <Grid item xs={4}>
           <InputFieldsCreate />
@@ -88,7 +91,7 @@ export default function Home(){
     </div>
   )
 }
-
+/*
 export async function getServerSideProps(context) {
   const session = await getSession(context)
 
@@ -105,5 +108,5 @@ export async function getServerSideProps(context) {
     props: { session }
   }
 }
-
+*/
 
