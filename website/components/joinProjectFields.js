@@ -13,10 +13,16 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import Paper from '@mui/material/Paper';
+import Alert from "@mui/material/Alert";
+import { useState } from "react";
 
 //waiting on backend to implement the user stuff
 
 const InputFieldsJoin = () => {
+  const [error, setError] = useState(false)
+  const [success, setSuccess] = useState(false)
+  const [other_error, set_other_error] = useState(false)
+
     const handleSubmit = (event) => {
         event.preventDefault();
         const data = new FormData(event.currentTarget);
@@ -32,8 +38,20 @@ const InputFieldsJoin = () => {
           body: JSON.stringify({ title: 'React POST Request Example' })
       };
       const req = await fetch(url, requestOptions)
+      if(req.status === 200){
+        setError(false)
+        setSuccess(true)
+        set_other_error(false)
+      }else if(req.status === 400){
+        setError(true)
+        setSuccess(false)
+        set_other_error(false)
+      }else if(req.status === 404){
+        setError(false)
+        setSuccess(false)
+        set_other_error(true)
+      }
       const new_data = await req.json()
-      console.log(new_data)
       }
 
 
@@ -64,6 +82,9 @@ const InputFieldsJoin = () => {
                 >
                   Join
                 </Button>
+                {error && <Alert severity="error">User already joined this project</Alert>}
+                {success && <Alert severity="success">Succesfully joined the project</Alert>}
+                {other_error && <Alert severity="error">Project does not exist</Alert>}
               </Box>
             </Box>
           </Container>

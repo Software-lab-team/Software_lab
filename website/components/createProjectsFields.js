@@ -12,10 +12,14 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-
-
+import Alert from "@mui/material/Alert";
+import { useState } from "react";
 
 const InputFieldsCreate = () => {
+
+     const [error, setError] = useState(false)
+     const [success, setSuccess] = useState(false)
+
     const handleSubmit = (event) => {
         event.preventDefault();
         const data = new FormData(event.currentTarget);
@@ -30,8 +34,13 @@ const InputFieldsCreate = () => {
           body: JSON.stringify({ title: 'React POST Request Example' })
       };
         const req = await fetch(url, requestOptions)
-        const new_data = await req.json()
-        console.log(new_data)
+        if(req.status === 200){
+          setError(false)
+          setSuccess(true)
+        }else{
+          setError(true)
+          setSuccess(false)
+        }
       }
 
       const theme = createTheme()
@@ -78,6 +87,8 @@ const InputFieldsCreate = () => {
                 >
                   Create
                 </Button>
+                {error && <Alert severity="error">Project name already exists</Alert>}
+                {success && <Alert severity="success">Succesfully created the project</Alert>}
               </Box>
             </Box>
           </Container>
