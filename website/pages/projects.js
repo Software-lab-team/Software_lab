@@ -10,9 +10,9 @@ import Paper from '@mui/material/Paper'
 import { getSession } from 'next-auth/react'
 import Box from "@mui/material/Box";
 
-export default function Home({users}){
+export default function Home({data_from_api, user}){
 
-  const [data, setData] = useState(users)
+  const [data, setData] = useState(data_from_api)
 
   return(
     <div>
@@ -22,16 +22,16 @@ export default function Home({users}){
         <Typography component="h1" variant="h4" sx={{margin : 5}}>
                 My Projects
         </Typography>
-          <ProjectList data={data}/>
+          <ProjectList dataArray={data} userName={user}/>
         </Grid>
           <Grid item xs={4}>
-          <InputFieldsCreate />
+          <InputFieldsCreate allProjectsArray={data} setAllProjectsArray={setData} userName={user}/>
           </Grid>
         <Grid item xs={4}>
-          <InputFieldsJoin />
+          <InputFieldsJoin allProjectsArray={data} setAllProjectsArray={setData} userName={user}/>
         </Grid>
         <Grid item xs={4}>
-        <InputFieldsDelete />
+        <InputFieldsDelete allProjectsArray={data} setAllProjectsArray={setData} userName={user}/>
         </Grid>
       </Grid>
     </div>
@@ -40,6 +40,7 @@ export default function Home({users}){
 
 export async function getServerSideProps(context) {
   const session = await getSession(context)
+  const userName = session.userName
 
   if (!session) {
     return {
@@ -52,10 +53,13 @@ export async function getServerSideProps(context) {
 
   const res = await fetch('http://127.0.0.1:5000/Projects?projectID=1') 
   const data = await res.json()
-  
+  //Remove after the API starts working
+  let newData = new Array()
+  newData.push("1")
+  newData.push("2")
 
   return {
-    props: { session, users : data }
+    props: { session, data_from_api : newData, user : userName}
   }
 }
 

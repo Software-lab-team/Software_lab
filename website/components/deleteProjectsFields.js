@@ -16,7 +16,7 @@ import Alert from "@mui/material/Alert";
 import { useState } from "react";
 
 
-const InputFieldsDelete = () => {
+const InputFieldsDelete = ({allProjectsArray, setAllProjectsArray, userName}) => {
 
     const [error, setError] = useState(false)
     const [success, setSuccess] = useState(false)
@@ -26,7 +26,14 @@ const InputFieldsDelete = () => {
         const data = new FormData(event.currentTarget);
         const url = "http://127.0.0.1:5000/Projects?projectID=" + data.get("id")
         deleteProjects(url)
+        //updateAllProjects()
       };
+
+      const updateAllProjects = async() => {
+        const res = await fetch('http://127.0.0.1:5000/Projects?projectID=1') 
+        const data = await res.json()
+        setAllProjectsArray(data)
+      }
       
       const theme = createTheme()
 

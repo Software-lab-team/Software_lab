@@ -15,8 +15,8 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import Alert from "@mui/material/Alert";
 import { useState } from "react";
 
-const InputFieldsCreate = () => {
-
+const InputFieldsCreate = ({allProjectsArray, setAllProjectsArray, userName}) => {
+     
      const [error, setError] = useState(false)
      const [success, setSuccess] = useState(false)
 
@@ -25,7 +25,14 @@ const InputFieldsCreate = () => {
         const data = new FormData(event.currentTarget);
         const url = "http://127.0.0.1:5000/Projects?projectID=" + data.get('id') + "&projectName=" + data.get('name') + "&projectDescription=" + data.get('description')
         createProject(url)
+        //updateAllProjects()
       };
+
+      const updateAllProjects = async() => {
+        const res = await fetch('http://127.0.0.1:5000/Projects?projectID=1') 
+        const data = await res.json()
+        setAllProjectsArray(data)
+      }
 
       const createProject = async(url) => {
         const requestOptions = {

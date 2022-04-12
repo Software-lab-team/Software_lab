@@ -18,7 +18,7 @@ import { useState } from "react";
 
 //waiting on backend to implement the user stuff
 
-const InputFieldsJoin = () => {
+const InputFieldsJoin = ({allProjectsArray, setAllProjectsArray, userName}) => {
   const [error, setError] = useState(false)
   const [success, setSuccess] = useState(false)
   const [other_error, set_other_error] = useState(false)
@@ -28,9 +28,16 @@ const InputFieldsJoin = () => {
         const data = new FormData(event.currentTarget);
         const url = "http://127.0.0.1:5000/Projects?userName=" + "Bryan" + "&projectID=" + data.get('id') 
         joinProject(url)
+        //updateAllProjects()
       };
       const theme = createTheme()
     
+      const updateAllProjects = async() => {
+        const res = await fetch('http://127.0.0.1:5000/Projects?projectID=1') 
+        const data = await res.json()
+        setAllProjectsArray(data)
+      }
+
       const joinProject = async(url) => {
         const requestOptions = {
           method: 'PUT',
