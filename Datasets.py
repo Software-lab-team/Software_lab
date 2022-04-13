@@ -14,7 +14,7 @@ def get_circor():
     wfdb.dl_files('circor-heart-sound', dl_dir, file_list)
     record = wfdb.rdheader('tmp_dl_dir/training_data/13918_AV') 
     shutil.rmtree(dl_dir)
-    return str(record.__dict__)
+    return record.__dict__
 
 # https://physionet.org/content/taichidb/1.0.2/
 def get_taichi():
@@ -34,7 +34,7 @@ def get_staff():
     wfdb.dl_files('staffiii', dl_dir, file_list)
     record = wfdb.rdheader('tmp_dl_dir/data/001a')
     shutil.rmtree(dl_dir) 
-    return str(record.__dict__)
+    return record.__dict__
 
 # https://physionet.org/content/aftdb/1.0.0/
 def get_aftdb():
@@ -44,7 +44,7 @@ def get_aftdb():
     wfdb.dl_files('aftdb', dl_dir, file_list)
     record = wfdb.rdheader('tmp_dl_dir/learning-set/n01')
     shutil.rmtree(dl_dir) 
-    return str(record.__dict__)
+    return record.__dict__
 
 # https://physionet.org/content/ahadb/1.0.0/
 def get_ahadb():
@@ -54,7 +54,7 @@ def get_ahadb():
     wfdb.dl_files('ahadb', dl_dir, file_list)
     record = wfdb.rdheader('tmp_dl_dir/0001')
     shutil.rmtree(dl_dir) 
-    return str(record.__dict__)
+    return record.__dict__
 
 #/Datasets?dataset=circor
 @Datasets.route("/Datasets")
