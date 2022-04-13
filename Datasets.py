@@ -24,7 +24,7 @@ def get_taichi():
     wfdb.dl_files('taichidb', dl_dir, file_list)
     record = wfdb.rdheader('tmp_dl_dir/Dual-task/S0088_DT_V1')
     shutil.rmtree(dl_dir) 
-    return str(record.__dict__)
+    return record.__dict__
 
 # https://physionet.org/content/staffiii/1.0.0/
 def get_staff():
