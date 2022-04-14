@@ -14,6 +14,8 @@ def get_circor():
     wfdb.dl_files('circor-heart-sound', dl_dir, file_list)
     record = wfdb.rdheader('tmp_dl_dir/training_data/13918_AV') 
     shutil.rmtree(dl_dir)
+    print(record.__dict__)
+    print(record)
     return str(record.__dict__)
 
 # https://physionet.org/content/taichidb/1.0.2/

@@ -51,12 +51,16 @@ export async function getServerSideProps(context) {
     }
   }
 
-  const res = await fetch('http://127.0.0.1:5000/Projects?projectID=1') 
-  const data = await res.json()
+  let res = await fetch('http://127.0.0.1:5000/Projects?projectID=1') 
+  let data = await res.json()
   //Remove after the API starts working
   let newData = new Array()
   newData.push("1")
   newData.push("2")
+
+  res = await fetch('http://127.0.0.1:5000/Datasets?dataset=circor')
+  data = await res.json()
+  console.log(data)
 
   return {
     props: { session, data_from_api : newData, user : userName}
