@@ -92,11 +92,12 @@ def post_new_project():
             return "The project does not exist", 404
 
         else:
+            project_id = project["projectID"]
             list_of_user_projects = user["associatedProjects"]
-            if project in list_of_user_projects:
+            if project_id in list_of_user_projects:
                 return "The project is already associated with the user", 400
             else:
-                list_of_user_projects.append(project)
+                list_of_user_projects.append(project_id)
                 article = {
                     'userName': username,
                     'password': user['password'],
@@ -106,7 +107,6 @@ def post_new_project():
                 userAdded = userCollection.find_one({'userName': username})
                 print(userAdded)
                 del userAdded['_id']
-
                 print(type({'result': userAdded}))
                 resp = dumps(userAdded)
                 return resp
