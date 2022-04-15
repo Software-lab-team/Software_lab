@@ -8,6 +8,8 @@ client = MongoClient('mongodb+srv://secure-username:secure-password@cluster0.di8
 db = client.Main
 projectCollection = db.Projects
 hwCollection = db.HWSets
+userCollection = db.Users
+
 class Project:
     def __init__(self):
         name: str
@@ -112,12 +114,14 @@ def getProjectSetByID():
     resp = dumps(receivedProject)
     return resp
 
-#/Projects?projectID=2&projectName=SecondProject&projectDescription=the-second-project
+#/Projects?projectID=2&projectName=SecondProject&projectDescription=the-second-project&userName=Bryan
 @Projects.route("/Projects", methods = ['POST'])
 def addProjectSet():
     projectID = request.args.get('projectID', type=str)
     projectName = request.args.get('projectName', type=str)
     projectDescription = request.args.get('projectDescription', type=str)
+    userName = request.args.get('userName', type=str)
+
     # Exception
     if projectCollection.count_documents({'projectID': projectID}, limit=1) != 0:
         return "Error: the projectID already exists", 400
@@ -132,6 +136,12 @@ def addProjectSet():
         "checkedOutSets": {
         }
     }
+    doc = userCollection.find_one({'userName': userName})
+    if not doc:
+        return f'There is no username with name {userName}'
+
+    doc['associatedProjects'].append(projectID)
+    userCollection.replace_one({"userName": userName}, doc, upsert=True)
 
     projectCollection.insert_one(article)
     articleAdded = projectCollection.find_one({'projectID': projectID})
