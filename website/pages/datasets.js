@@ -39,11 +39,11 @@ export async function getServerSideProps(context) {
       method: 'GET',
       headers: { 'Content-Type': 'application/json' },
   };
-    console.log(i)
     const res = await fetch('http://127.0.0.1:5000/Datasets?dataset='+datasets[i], requestOptions) 
-    console.log(JSON.stringify(res))
-    //const data_api = await res.json()
-    data.push(JSON.stringify(res))
+    
+    const data_api = await res.json()
+    console.log(data_api)
+    data.push(JSON.stringify(data_api))
   }
 
   console.log(data)
