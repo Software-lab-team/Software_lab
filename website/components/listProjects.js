@@ -5,7 +5,7 @@ import ListItemText from '@mui/material/ListItemText';
 import Divider from '@mui/material/Divider';
 import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { getSession } from 'next-auth/react';
 //Have an array as input, and create the corresponding list iteratively with primary being the element in the array
 
@@ -13,26 +13,31 @@ import { getSession } from 'next-auth/react';
 // e.g Data is an array, and will have to call an API for every element in the array
 
 
-const ProjectList = ({dataArray, userName}) => {
-    const text = "Hello"
+const ProjectList = ({userName, setAllProjectsArray, dataArray}) => {
+
     
+    const [project_names, setProject_names] = useState([])
+    let project_names_temp = new Array()
+
+    const fetchData_IDs = async () =>{
+        for(let i = 0; i < dataArray.length; i++){
+            id = dataArray[i]
+            const res = await fetch('http://127.0.0.1:5000/Projects?projectID='+id) 
+            const data = await res.json()
+            project_names_temp.push(data.projectName)
+        }
+        setProject_names(project_names_temp)
+    }
+    useEffect(()=>{fetchData_IDs()},[dataArray])
+
     return(
         <Paper elevation={3} sx={{margin : 5}}>
             <List>
-                {dataArray.map((id) => {
-                    const [data, setData] = useState("")
-
-                    const fetchData = async () =>{
-                        const res = await fetch('http://127.0.0.1:5000/Projects?projectID='+id) 
-                        const data = await res.json()
-                        setData(data.projectName)
-                    }
-                    console.log(1)
-                    fetchData()
+                {project_names.map((project_name) => { 
                     return(
                         <div>
                             <ListItem>
-                                <ListItemText primary={data}/>
+                                <ListItemText primary={project_name}/>
                             </ListItem>
                             <Divider />
                         </div>
@@ -42,5 +47,7 @@ const ProjectList = ({dataArray, userName}) => {
         </Paper>
     )
 }
+
+
 
 export default ProjectList

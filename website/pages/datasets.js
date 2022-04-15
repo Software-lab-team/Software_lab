@@ -5,7 +5,7 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import { getSession } from 'next-auth/react';
 
-export default function Home(){
+export default function Home({dataArray}){
   return(
       <div>
         <Header />
@@ -13,7 +13,7 @@ export default function Home(){
         <Typography component="h1" variant="h4" sx={{marginBottom : 5}}>
           Datasets
         </Typography>
-          <SimpleAccordion /> 
+          <SimpleAccordion dataArray={dataArray} /> 
         </Box>
       </div>
   )  
@@ -31,7 +31,25 @@ export async function getServerSideProps(context) {
     }
   }
 
+  let datasets = ["circor", "taichi", "staffiii", "aftdb", "ahadb"]
+  let data = new Array()
+
+  for(let i = 0; i < datasets.length; i++){
+    const requestOptions = {
+      method: 'GET',
+      headers: { 'Content-Type': 'application/json' },
+  };
+    console.log(i)
+    const res = await fetch('http://127.0.0.1:5000/Datasets?dataset='+datasets[i], requestOptions) 
+    console.log(JSON.stringify(res))
+    //const data_api = await res.json()
+    data.push(JSON.stringify(res))
+  }
+
+  console.log(data)
+
   return {
-    props: { session }
+    props: { session, dataArray : data }
   }
 }
+

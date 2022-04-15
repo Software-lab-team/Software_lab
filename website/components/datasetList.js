@@ -8,7 +8,10 @@ import Link from '@mui/material/Link';
 import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
 
-const SimpleAccordion = () => {
+const SimpleAccordion = ({dataArray}) => {
+
+  console.log(dataArray)
+
   return (
     <div>
       <Accordion>
@@ -28,6 +31,7 @@ const SimpleAccordion = () => {
             Background: Electrocardiograms (ECGs) provide time-varying measurements of the electrical activity of the heart. These signals can provide insights into underlying aspects of heart health and disease. ECG waveforms are typically presented against a standardized background grid that allows features such as intervals and amplitudes to be easily interpreted. A number of ECG visualization tools are publicly available, several of which are available on PhysioNet [1-6]. However, these tools typically require significant set up and may be more feature heavy than needed for those seeking to simply view 12-lead ECGs.
 
             Clinical investigators are often able to export raw ECG signals as .txt files comprising a matrix of digits in columns and rows. These are not immediately straightforward to view and explore. To satisfy the requests of clinical investigators who would like to see ECGs in their favorite clinical 12-lead ECG presentation view, there is therefore a demand for a simple viewer to handle these .txt files.
+            {dataArray[0]}
           </Typography>
           <Box sx={{marginTop : 2}}>
             <Link href="https://physionet.org/static/published-projects/12-lead-ecg-viewer-matlab/lightweight-12-lead-ecg-viewer-for-matlab-1.0.0.zip" variant="body2" sx={{marginTop : 5}}>
@@ -60,6 +64,7 @@ const SimpleAccordion = () => {
             Current available datasets of gait and posture analysis, present data that do not correspond to the real-world settings [8]. Most datasets that present accurate 3D joint data, usually obtained with on-body visual markers, are captured in laboratory context, within controlled environments [9,10,11,12]. Furthermore, most datasets do not provide camera-related data together with 3D joint coordinates obtained with standard motion tracker systems [13]. Those that provide camera-related data, namely depth recordings, have joint data that is captured with the Kinect SDK (Microsoft Corporation, USA) which is prone to errors and not robust to environmental conditions [11,12].
 
             To address these challenges, this dataset presents multi-camera vision data involving 14 healthy subjects walking with a robotic walker. The dataset includes raw inertial data, segments’ position, orientation, acceleration and angular velocity, and joint angles, measured with the commercially available Xsens MTw Awinda motion capture system [14], and depth frames of gait (GC) and posture (PC), captured with the walker's embedded cameras [3].
+            {dataArray[1]}
           </Typography>
           <Box sx={{marginTop : 2}}>
             <Link href="https://physionet.org/static/published-projects/multi-gait-posture/a-multi-camera-and-multimodal-dataset-for-posture-and-gait-analysis-1.0.0.zip" variant="body2" sx={{marginTop : 5}}>
@@ -84,6 +89,7 @@ const SimpleAccordion = () => {
           </Typography>
           <Typography sx={{marginTop : 5}}>
            Background: Cardiac and respiratory data measured during graded exercise tests are key measures to calculate several cardio-respiratory indices used in sport science [1] and medicine [2,3]. All the parts of the oxygen consumption and heart rate dynamics during a GET are of interest: the rate of increase at exercise onset [4], the slope during exercise [5,6], the maximal values [7,8], the dynamics changes at ventilatory thresholds [9,10], the nonlinear dynamics during effort [11–13], and finally the dynamics during recovery [14,15]. The study of each of these segments of the oxygen consumption or heart rate dynamics during effort has led to indices used to characterize and predict health, fitness, or performance, such as ventilatory thresholds, heart resting rate, rate of heart rate increase, deflection point of the performance curve, etc. But comparisons between existing calculation methods for these indices are lacking, and reproducibility of the calculation is sometimes hindered by the lack of available open-source code. The goal of this dataset is then two-fold: To facilitate the publication and diffusion of calculation methods and associated code to analyze cardiorespiratory measurements of maximal exercise tests; To encourage studies comparing different calculation methods of indices derived from the cardio-respiratory measurements acquired during effort tests, such as ventilatory thresholds or heart rate recovery.
+           {dataArray[2]}
           </Typography>
           <Box sx={{marginTop : 2}}>
             <Link href="https://physionet.org/static/published-projects/treadmill-exercise-cardioresp/treadmill-maximal-exercise-tests-from-the-exercise-physiology-and-human-performance-lab-of-the-university-of-malaga-1.0.1.zip" variant="body2" sx={{marginTop : 5}}>
@@ -112,6 +118,7 @@ const SimpleAccordion = () => {
           Gait stride time variability (calculated from stride to stride intervals) and speed are established measures of mobility health [13-15].  Complexity based metrics such as detrended fluctuation analysis have shown promise for assessing mobility health but have not been widely used to assess changes in gait due to Tai Chi training [16-17]. The collection of 10 minutes of gait data (under the single-task condition) is enough for the computation of detrended fluctuation analysis which can reveal long-term memory effects across the span of hundreds of strides [16].
 
           Additionally, few studies have investigated the muscle activation patterns associated with Tai Chi training in an effort to understand the mechanisms behind Tai Chi’s effects on mobility. Muscle co-contraction measured using electromyography (EMG), and defined as the simultaneous activation of agonist and antagonist muscle groups, can serve as an informative clinical marker of mobility health [18]. The data from this project allows for exploration of whether co-contraction of muscle groups in the lower extremities may be an underlying mechanism associated with mobility improvements from Tai Chi training.
+          {dataArray[3]}
           </Typography>
           <Box sx={{marginTop : 2}}>
             <Link href="https://physionet.org/static/published-projects/taichidb/tai-chi-physiological-complexity-and-healthy-aging-gait-1.0.2.zip" variant="body2" sx={{marginTop : 5}}>
@@ -142,6 +149,7 @@ const SimpleAccordion = () => {
             Tricuspid valve: left lower sternal border
             Mitral valve: fifth intercostal space, midclavicular line (cardiac apex)
             Blood flowing through these structures creates audible sounds, which are more audible the more turbulent the flow is [1]. The first heart sound (S1) is produced by vibrations of the mitral and tricuspid valves as they close in at the beginning of the systole. S1 is audible at the chest wall and is formed by two components – the mitral and tricuspid [1]. Although the mitral component of S1 is louder and occurs sooner, under physiological resting conditions, both components occur closely enough, making it hard to distinguish them [2]. The second heart sound (S2) is produced by the closure of the aortic and pulmonic valves, at the beginning of the diastole. Similarly to the S1, it is also formed by two components, with the aortic component being louder and occurring sooner than the pulmonic component, due to the pressures in the aorta being higher than in the pulmonary artery. In contrast and unlike S1, under normal conditions the closure sound of the aortic and pulmonic valves can be discernible, due to an increase in venous return during inspiration, which slightly delays the pressure increase in the pulmonary artery and consequently the pulmonic valve closure [3].
+            {dataArray[4]}
           </Typography>
           <Box sx={{marginTop : 2}}>
             <Link href="https://physionet.org/static/published-projects/taichidb/tai-chi-physiological-complexity-and-healthy-aging-gait-1.0.2.zip" variant="body2" sx={{marginTop : 5}}>
@@ -154,5 +162,9 @@ const SimpleAccordion = () => {
     </div>
   );
 }
+
+
+
+
 
 export default SimpleAccordion

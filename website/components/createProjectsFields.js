@@ -19,17 +19,21 @@ const InputFieldsCreate = ({allProjectsArray, setAllProjectsArray, userName}) =>
      
      const [error, setError] = useState(false)
      const [success, setSuccess] = useState(false)
+     const [errorMessage, setErrorMessage] = useState("")
 
     const handleSubmit = (event) => {
         event.preventDefault();
         const data = new FormData(event.currentTarget);
-        const url = "http://127.0.0.1:5000/Projects?projectID=" + data.get('id') + "&projectName=" + data.get('name') + "&projectDescription=" + data.get('description')
+        const url = "http://127.0.0.1:5000/Projects?projectID=" + data.get('id') + "&projectName=" + data.get('name') + "&projectDescription=" + data.get('description') + "&userName=" + userName
         createProject(url)
-        //updateAllProjects()
       };
 
       const updateAllProjects = async() => {
-        const res = await fetch('http://127.0.0.1:5000/Projects?projectID=1') 
+        const requestOptions = {
+          method: 'GET',
+          headers: { 'Content-Type': 'application/json' },
+      };
+        const res = await fetch('http://127.0.0.1:5000/Users/get-projects?userName=' + userName, requestOptions) 
         const data = await res.json()
         setAllProjectsArray(data)
       }
@@ -40,14 +44,20 @@ const InputFieldsCreate = ({allProjectsArray, setAllProjectsArray, userName}) =>
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ title: 'React POST Request Example' })
       };
-        const req = await fetch(url, requestOptions)
-        if(req.status === 200){
+
+        const req = await fetch(url, requestOptions).then((response) => {
+          if (response.ok) {
           setError(false)
           setSuccess(true)
-        }else{
+          updateAllProjects()
+          return response.json();
+          }
           setError(true)
           setSuccess(false)
-        }
+          setErrorMessage(response.text())
+          return response.text();
+        });
+
       }
 
       const theme = createTheme()
@@ -94,7 +104,7 @@ const InputFieldsCreate = ({allProjectsArray, setAllProjectsArray, userName}) =>
                 >
                   Create
                 </Button>
-                {error && <Alert severity="error">Project name already exists</Alert>}
+                {error && <Alert severity="error">{errorMessage}</Alert>}
                 {success && <Alert severity="success">Succesfully created the project</Alert>}
               </Box>
             </Box>

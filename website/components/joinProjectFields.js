@@ -21,44 +21,47 @@ import { useState } from "react";
 const InputFieldsJoin = ({allProjectsArray, setAllProjectsArray, userName}) => {
   const [error, setError] = useState(false)
   const [success, setSuccess] = useState(false)
-  const [other_error, set_other_error] = useState(false)
+  const [errorMessage, setErrorMessage] = useState("")
 
     const handleSubmit = (event) => {
         event.preventDefault();
         const data = new FormData(event.currentTarget);
-        const url = "http://127.0.0.1:5000/Projects?userName=" + "Bryan" + "&projectID=" + data.get('id') 
+        const url = "http://127.0.0.1:5000/Users/update-user?userName=" + userName + "&projectID=" + data.get('id') 
         joinProject(url)
-        //updateAllProjects()
       };
       const theme = createTheme()
     
       const updateAllProjects = async() => {
-        const res = await fetch('http://127.0.0.1:5000/Projects?projectID=1') 
+        const requestOptions = {
+          method: 'GET',
+          headers: { 'Content-Type': 'application/json' },
+      };
+        const res = await fetch('http://127.0.0.1:5000/Users/get-projects?userName=' + userName, requestOptions) 
         const data = await res.json()
         setAllProjectsArray(data)
       }
 
       const joinProject = async(url) => {
         const requestOptions = {
-          method: 'PUT',
+          method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ title: 'React POST Request Example' })
       };
-      const req = await fetch(url, requestOptions)
+      const req = await fetch(url, requestOptions).then((response) => {
+        if (response.ok) {
+          return response.json();
+        }
+        return response.text();
+      });
       if(req.status === 200){
         setError(false)
         setSuccess(true)
-        set_other_error(false)
-      }else if(req.status === 400){
+        updateAllProjects()
+      }else{
         setError(true)
         setSuccess(false)
-        set_other_error(false)
-      }else if(req.status === 404){
-        setError(false)
-        setSuccess(false)
-        set_other_error(true)
-      }
-      const new_data = await req.json()
+        setErrorMessage(req)
+       }
       }
 
 
@@ -89,9 +92,8 @@ const InputFieldsJoin = ({allProjectsArray, setAllProjectsArray, userName}) => {
                 >
                   Join
                 </Button>
-                {error && <Alert severity="error">User already joined this project</Alert>}
+                {error && <Alert severity="error">{errorMessage}</Alert>}
                 {success && <Alert severity="success">Succesfully joined the project</Alert>}
-                {other_error && <Alert severity="error">Project does not exist</Alert>}
               </Box>
             </Box>
           </Container>
