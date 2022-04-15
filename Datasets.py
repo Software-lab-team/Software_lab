@@ -2,6 +2,7 @@ from flask import Flask, Blueprint, request
 import os
 import wfdb
 import shutil
+import json
 
 app = Flask(__name__)
 Datasets = Blueprint("Datasets", __name__)
@@ -14,7 +15,7 @@ def get_circor():
     wfdb.dl_files('circor-heart-sound', dl_dir, file_list)
     record = wfdb.rdheader('tmp_dl_dir/training_data/13918_AV') 
     shutil.rmtree(dl_dir)
-    return record.__dict__
+    return json.dumps(record.__dict__, indent=4, sort_keys=True, default=str)
 
 # https://physionet.org/content/taichidb/1.0.2/
 def get_taichi():
@@ -24,7 +25,7 @@ def get_taichi():
     wfdb.dl_files('taichidb', dl_dir, file_list)
     record = wfdb.rdheader('tmp_dl_dir/Dual-task/S0088_DT_V1')
     shutil.rmtree(dl_dir) 
-    return record.__dict__
+    return json.dumps(record.__dict__, indent=4, sort_keys=True, default=str)
 
 # https://physionet.org/content/staffiii/1.0.0/
 def get_staff():
@@ -34,7 +35,7 @@ def get_staff():
     wfdb.dl_files('staffiii', dl_dir, file_list)
     record = wfdb.rdheader('tmp_dl_dir/data/001a')
     shutil.rmtree(dl_dir) 
-    return record.__dict__
+    return json.dumps(record.__dict__, indent=4, sort_keys=True, default=str)
 
 # https://physionet.org/content/aftdb/1.0.0/
 def get_aftdb():
@@ -44,7 +45,7 @@ def get_aftdb():
     wfdb.dl_files('aftdb', dl_dir, file_list)
     record = wfdb.rdheader('tmp_dl_dir/learning-set/n01')
     shutil.rmtree(dl_dir) 
-    return record.__dict__
+    return json.dumps(record.__dict__, indent=4, sort_keys=True, default=str)
 
 # https://physionet.org/content/ahadb/1.0.0/
 def get_ahadb():
@@ -54,7 +55,7 @@ def get_ahadb():
     wfdb.dl_files('ahadb', dl_dir, file_list)
     record = wfdb.rdheader('tmp_dl_dir/0001')
     shutil.rmtree(dl_dir) 
-    return record.__dict__
+    return json.dumps(record.__dict__, indent=4, sort_keys=True, default=str)
 
 #/Datasets?dataset=circor
 @Datasets.route("/Datasets")
