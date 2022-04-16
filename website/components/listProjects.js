@@ -17,14 +17,18 @@ const ProjectList = ({userName, setAllProjectsArray, dataArray}) => {
 
     
     const [project_names, setProject_names] = useState([])
+    const [project_ids, setProject_ids] = useState([])
     let project_names_temp = new Array()
+    let project_ids_temp = new Array()
 
     const fetchData_IDs = async () =>{
         for(let i = 0; i < dataArray.length; i++){
             id = dataArray[i]
             const res = await fetch('http://127.0.0.1:5000/Projects?projectID='+id) 
             const data = await res.json()
+            console.log(data)
             project_names_temp.push(data.projectName)
+            project_ids_temp.push(data.projectID)
         }
         setProject_names(project_names_temp)
     }
@@ -33,13 +37,13 @@ const ProjectList = ({userName, setAllProjectsArray, dataArray}) => {
     return(
         <Paper elevation={3} sx={{margin : 5}}>
             <List>
-                {project_names.map((project_name) => { 
+                {project_names.map((project_name, i) => { 
                     return(
-                        <div>
-                            <ListItem>
-                                <ListItemText primary={project_name}/>
+                        <div key={project_ids[i]}>
+                            <ListItem key={project_ids[i]}>
+                                <ListItemText primary={project_name} key={project_ids[i] + 1} />
                             </ListItem>
-                            <Divider />
+                            <Divider key={project_ids[i]}/>
                         </div>
                     )
                 })}
