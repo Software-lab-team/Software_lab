@@ -23,7 +23,8 @@ const ProjectList = ({userName, setAllProjectsArray, dataArray}) => {
 
     const fetchData_IDs = async () =>{
         for(let i = 0; i < dataArray.length; i++){
-            id = dataArray[i]
+            console.log(dataArray)
+            let id = dataArray[i]
             const res = await fetch('http://127.0.0.1:5000/Projects?projectID='+id) 
             const data = await res.json()
             console.log(data)
