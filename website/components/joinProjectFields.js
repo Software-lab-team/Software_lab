@@ -53,11 +53,12 @@ const InputFieldsJoin = ({allProjectsArray, setAllProjectsArray, userName}) => {
         }
         return response.text();
       });
-      if(req.status === 200){
+      if(typeof req !== 'string'){
         setError(false)
         setSuccess(true)
         updateAllProjects()
       }else{
+        console.log(req)
         setError(true)
         setSuccess(false)
         setErrorMessage(req)
