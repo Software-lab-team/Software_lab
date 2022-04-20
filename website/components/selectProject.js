@@ -19,11 +19,27 @@ const SelectProject = (props) => {
 
   const getProjects = async () => {
     const session = await getSession();
-    await fetch(
+    const res = await fetch(
       "http://127.0.0.1:5000/Users/get-projects?userName=" + session.userName
     )
       .then((response) => response.json())
-      .then((data) => setProjects(data));
+      .then((data) => {
+        return data;
+      });
+
+    let projects = await Promise.all(
+      res.map(async (projectID) => {
+        return await fetch(
+          "http://127.0.0.1:5000/Projects?projectID=" + projectID
+        )
+          .then((response) => response.json())
+          .then((data) => {
+            return data;
+          });
+      })
+    );
+
+    setProjects(projects);
   };
 
   useEffect(() => {
