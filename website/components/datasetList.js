@@ -8,6 +8,13 @@ import Link from '@mui/material/Link';
 import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
 
+
+
+/*
+Code for the dropdown list inside the Dataset page
+dataArray returns the metadata that was extracted by the backend, doesn't have to be organized
+*/
+
 const SimpleAccordion = ({dataArray}) => {
 
   console.log(dataArray)

@@ -6,6 +6,13 @@ import Toolbar from '@mui/material/Toolbar';
 import Button from '@mui/material/Button';
 import { signOut } from 'next-auth/react';
 
+
+
+/*
+Code for the top widget that every page has
+If the name of the js of one of the pages changes, then it most be changed here to link it properly
+*/
+
 const Header = () => {
     return(
         <AppBar

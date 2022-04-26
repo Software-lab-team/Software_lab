@@ -16,7 +16,11 @@ import Paper from '@mui/material/Paper';
 import Alert from "@mui/material/Alert";
 import { useState } from "react";
 
-//waiting on backend to implement the user stuff
+/*
+Code for the join project widget that is in the projects page
+setAllProjectsArray updates the list of projects that the user is linked to. It is passed so that the list is updated without the need for 
+the user to refresh the page. 
+ */
 
 const InputFieldsJoin = ({allProjectsArray, setAllProjectsArray, userName}) => {
   const [error, setError] = useState(false)
@@ -53,9 +57,11 @@ const InputFieldsJoin = ({allProjectsArray, setAllProjectsArray, userName}) => {
         }
         return response.text();
       });
+      //It will only return a string if there is an error with the API call, with the string having the error message sent by the backend
       if(typeof req !== 'string'){
         setError(false)
         setSuccess(true)
+        //gets called inside this function so that it waits for the list of project associated with the user to be up to date in the backend
         updateAllProjects()
       }else{
         console.log(req)
