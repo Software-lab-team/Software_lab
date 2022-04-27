@@ -17,12 +17,7 @@ export default NextAuth({
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials, req) {
-        // You need to provide your own logic here that takes the credentials
-        // submitted and returns either a object representing a user or value
-        // that is false/null if the credentials are invalid.
-        // e.g. return { id: 1, name: 'J Smith', email: 'jsmith@example.com' }
-        // You can also use the `req` object to obtain additional parameters
-        // (i.e., the request IP address)
+        // Return the encrypted password for the given username
         const hash = await fetch(
           "http://127.0.0.1:5000/Users/get-password?userName=" +
             credentials.username
@@ -40,11 +35,13 @@ export default NextAuth({
             return data.password;
           });
 
+        // Determine whether the plaintext password matches the encrypted password stored in the database
         const bcrypt = require("bcryptjs");
         const password = (await bcrypt.compare(credentials.password, hash))
           ? hash
           : credentials.password;
 
+        // Return user data if password is valid, or throw an error
         const res = await fetch(
           "http://127.0.0.1:5000/Users?userName=" +
             credentials.username +
@@ -58,6 +55,7 @@ export default NextAuth({
             return response.text();
           })
           .then((data) => {
+            //It will only return a string if there is an error with the API call, with the string having the error message sent by the backend
             if (typeof data === "string") {
               throw new Error(data);
             }
@@ -80,15 +78,11 @@ export default NextAuth({
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials, req) {
-        // You need to provide your own logic here that takes the credentials
-        // submitted and returns either a object representing a user or value
-        // that is false/null if the credentials are invalid.
-        // e.g. return { id: 1, name: 'J Smith', email: 'jsmith@example.com' }
-        // You can also use the `req` object to obtain additional parameters
-        // (i.e., the request IP address)
+        // Encrypt the plaintext password
         const bcrypt = require("bcryptjs");
         const hash = await bcrypt.hash(credentials.password, 10);
 
+        // Post the new user to the database, or throw an error if the user already exists
         const res = await fetch(
           "http://127.0.0.1:5000/Users?userName=" +
             credentials.username +
@@ -103,6 +97,7 @@ export default NextAuth({
             return response.text();
           })
           .then((data) => {
+            //It will only return a string if there is an error with the API call, with the string having the error message sent by the backend
             if (typeof data === "string") {
               throw new Error(data);
             }

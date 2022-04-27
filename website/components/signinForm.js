@@ -6,6 +6,12 @@ import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import { useState } from "react";
 
+/*
+Code for the form to signin/signup.
+emptyFields prop will highlight empty text fields when the form is submitted.
+setShowPass toggles whether the password should be displayed in plaintext or hidden
+*/
+
 const SigninForm = (props) => {
   const { type, emptyFields } = props;
 

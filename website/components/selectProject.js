@@ -5,6 +5,11 @@ import Select from "@mui/material/Select";
 import { getSession } from "next-auth/react";
 import { useState, useEffect } from "react";
 
+/*
+Code for selecting which project to check in/out resources in the resource stepper component.
+setProject updates the project that is selected from the Select component
+*/
+
 const SelectProject = (props) => {
   const [projects, setProjects] = useState([]);
   const { project, setProject, error } = props;
@@ -19,13 +24,35 @@ const SelectProject = (props) => {
 
   const getProjects = async () => {
     const session = await getSession();
-    await fetch(
+
+    // Returns list of projectIDs
+    const res = await fetch(
       "http://127.0.0.1:5000/Users/get-projects?userName=" + session.userName
     )
       .then((response) => response.json())
-      .then((data) => setProjects(data));
+      .then((data) => {
+        return data;
+      });
+
+    // Returns list of projects
+    let projects = await Promise.all(
+      res.map(async (projectID) => {
+        return await fetch(
+          "http://127.0.0.1:5000/Projects?projectID=" + projectID
+        )
+          .then((response) => response.json())
+          .then((data) => {
+            return data;
+          });
+      })
+    );
+
+    setProjects(projects);
   };
 
+  /*
+  Get the list of projects on the first rendering of the page
+  */
   useEffect(() => {
     getProjects();
   }, []);
@@ -44,13 +71,16 @@ const SelectProject = (props) => {
           onChange={handleChange}
           defaultValue=""
         >
-          {projects.map((project) => {
-            return (
-              <MenuItem key={project.projectID} value={project}>
-                {project.projectName}
-              </MenuItem>
-            );
-          })}
+          {
+            // Display a list of all projects in the Select component
+            projects.map((project) => {
+              return (
+                <MenuItem key={project.projectID} value={project}>
+                  {project.projectName}
+                </MenuItem>
+              );
+            })
+          }
         </Select>
       </FormControl>
     </div>

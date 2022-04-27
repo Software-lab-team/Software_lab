@@ -4,6 +4,11 @@ import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import { useState } from "react";
 
+/*
+Code for creating a new HWSet in the resources page.
+Passes the error prop, which will highlight empty text boxes when the submit button is pressed
+*/
+
 const CreateResource = ({ error }) => {
   const [name, setName] = useState("");
   const [capacity, setCapacity] = useState("");

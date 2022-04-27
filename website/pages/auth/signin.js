@@ -11,7 +11,9 @@ import { signIn } from "next-auth/react";
 import { useRouter } from "next/router";
 import { getSession } from "next-auth/react";
 
-//This is the landing page of the website. Can be the login page
+/*
+Code for the signin/signup page.
+*/
 
 export default function SignIn() {
   const [signup, setSignup] = useState(false);
@@ -27,11 +29,13 @@ export default function SignIn() {
     const username = data.get("username");
     const password = data.get("password");
 
+    // If either field is empty, set emptyFields to highlight empty text boxes
     if (!username || !password) {
       setEmptyFields(true);
       return;
     }
 
+    // Call the signin API located in pages/api/auth/[...nextauth].js
     await signIn("signin", {
       callbackUrl: `${window.location.origin}/resources`,
       username: username,
@@ -39,10 +43,12 @@ export default function SignIn() {
     });
   };
 
+  // Open the Dialog box when the signup button is clicked
   const handleOpen = () => {
     setSignup(true);
   };
 
+  // Close the Dialog box when the user clicks off of it
   const handleClose = () => {
     setSignup(false);
   };
@@ -63,7 +69,10 @@ export default function SignIn() {
           <Button variant="text" onClick={handleOpen}>
             {"Don't have an account? Sign Up"}
           </Button>
-          {error && <Alert severity="error">{error}</Alert>}
+          {
+            // If there is an error, display the error message (i.e. invalid username/password, username already exists)
+            error && <Alert severity="error">{error}</Alert>
+          }
         </Box>
         <Signup open={signup} onClose={handleClose} />
       </main>

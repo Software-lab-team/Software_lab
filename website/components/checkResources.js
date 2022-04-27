@@ -5,6 +5,12 @@ import Box from "@mui/material/Box";
 import FormHelperText from "@mui/material/FormHelperText";
 import TextField from "@mui/material/TextField";
 
+/*
+Code for specifying the operation (check-in or checkout) and amount in the resource stepper component.
+project is the selected Project, hwset is the selected HWSet, and setCheck updates whether a 
+check-in or checkout is being attempted and the number of resources being checked in/out
+*/
+
 const CheckResources = (props) => {
   const { project, hwset, check, setCheck, error } = props;
 
@@ -22,20 +28,23 @@ const CheckResources = (props) => {
         <FormControlLabel value={1} control={<Radio />} label="Check-in" />
         <FormControlLabel value={-1} control={<Radio />} label="Checkout" />
       </RadioGroup>
-      {check.checkIn ? (
-        check.checkIn > 0 ? (
-          <FormHelperText>
-            You can check-in {project.checkedOutSets[hwset.name] || 0} resources
-            from {hwset.name}
-          </FormHelperText>
+      {
+        // If a radio button has been selected, display the number of resources that can be checked in/out
+        check.checkIn ? (
+          check.checkIn > 0 ? (
+            <FormHelperText>
+              You can check-in {project.checkedOutSets[hwset.name] || 0}{" "}
+              resources from {hwset.name}
+            </FormHelperText>
+          ) : (
+            <FormHelperText>
+              You can checkout {hwset.availability} resources from {hwset.name}
+            </FormHelperText>
+          )
         ) : (
-          <FormHelperText>
-            You can checkout {hwset.availability} resources from {hwset.name}
-          </FormHelperText>
+          <FormHelperText error={error}>Please choose an option</FormHelperText>
         )
-      ) : (
-        <FormHelperText error={error}>Please choose an option</FormHelperText>
-      )}
+      }
       <TextField
         onChange={(event) => {
           event.target.value = event.target.value < 0 ? 1 : event.target.value;
@@ -50,9 +59,12 @@ const CheckResources = (props) => {
         type="number"
         InputProps={{ inputProps: { min: 1 } }}
       />
-      {typeof error === "string" && (
-        <FormHelperText error={true}>{error}</FormHelperText>
-      )}
+      {
+        // Display an error message if the API returns an error (i.e. more resources are being checked in/out than are available)
+        typeof error === "string" && (
+          <FormHelperText error={true}>{error}</FormHelperText>
+        )
+      }
     </Box>
   );
 };
