@@ -41,12 +41,3 @@ def addHWSet():
     print(articleAdded)
     del articleAdded['_id']
     return jsonify({'result': articleAdded})
-
-#/HWSets?name=HWSet1
-@HWSets.route('/HWSets', methods=['DELETE']) # Note: does not check if name exists
-def delHWSet():
-    name = request.args.get('name', type=str)
-    articleAdded = hwCol.find_one({'name': name})
-    del articleAdded['_id'] 
-    hwCol.delete_one({'name': name}) 
-    return jsonify({'result deleted': articleAdded})
