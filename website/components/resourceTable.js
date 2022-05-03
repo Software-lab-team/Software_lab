@@ -7,7 +7,6 @@ import TableRow from "@mui/material/TableRow";
 import Typography from "@mui/material/Typography";
 import Paper from "@mui/material/Paper";
 import Alert from "@mui/material/Alert";
-import Button from "@mui/material/Button";
 import { useState, useEffect } from "react";
 import CreateResource from "../components/createResource";
 
@@ -67,17 +66,6 @@ const ResourceTable = (props) => {
       });
   };
 
-  // Delete the HWSet from the database, and update the hwsets prop so the resource table is rerendered to show the deletion
-  const deleteHwset = async (i, name) => {
-    let newArr = [...hwsets];
-    newArr.splice(i, 1);
-    setHwsets(newArr);
-
-    await fetch("http://127.0.0.1:5000/HWSets?name=" + name, {
-      method: "DELETE",
-    });
-  };
-
   return (
     <Paper elevation={3} sx={{ margin: 5, padding: 5 }}>
       <TableContainer component="form" onSubmit={handleSubmit}>
@@ -100,14 +88,6 @@ const ResourceTable = (props) => {
                   <TableCell>{row.name}</TableCell>
                   <TableCell>{row.capacity}</TableCell>
                   <TableCell>{row.availability}</TableCell>
-                  <TableCell>
-                    <Button
-                      variant="contained"
-                      onClick={() => deleteHwset(i, row.name)}
-                    >
-                      Delete {row.name}
-                    </Button>
-                  </TableCell>
                 </TableRow>
               );
             })}
