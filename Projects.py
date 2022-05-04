@@ -155,7 +155,33 @@ def addProjectSet():
 def deleteProjectSet():
     projectID = request.args.get('projectID', type=str)
     if projectCollection.count_documents({'projectID': projectID}, limit=1) != 0:
+
+        # Have to return Hardware Sets before deleting the project
+        project = projectCollection.find_one({'projectID': projectID})
+        dict_of_hardware_sets = project['checkedOutSets']
+        for set_name, value in dict_of_hardware_sets.items():
+            new_hw_collection_doc = dict()
+            hw_collection_doc = hwCollection.find_one({"name": set_name})
+            new_hw_collection_doc["name"] = hw_collection_doc["name"]
+            new_hw_collection_doc["capacity"] = hw_collection_doc["capacity"]
+            new_hw_collection_doc["availability"] = hw_collection_doc["availability"] + value
+            hwCollection.replace_one({"name": set_name}, new_hw_collection_doc, upsert=True)
+
         projectCollection.delete_one({'projectID': projectID})
+
+        # Have to scan all users in the database to see if they were involved with the project
+
+        cursor = userCollection.find({})
+        for doc in cursor:
+            list_of_projects = doc['associatedProjects']
+            if projectID in list_of_projects:
+                list_of_projects.remove(projectID)
+                doc['associatedProjects'] = list_of_projects
+                userCollection.replace_one({'userName': doc['userName']}, doc, upsert=True)
+
+            else:
+                continue
+
         return "Success"
     else:
         return "The project was not found", 400
