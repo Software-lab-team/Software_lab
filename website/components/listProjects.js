@@ -7,10 +7,12 @@ import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
 import React, { useEffect, useState } from 'react';
 import { getSession } from 'next-auth/react';
-//Have an array as input, and create the corresponding list iteratively with primary being the element in the array
 
-// New API will return a list of IDs related to the user
-// e.g Data is an array, and will have to call an API for every element in the array
+
+/*
+Code for the widget that displays the projects that the user is linked to
+dataArray contains a list of the ids of the project associated with the user
+*/
 
 
 const ProjectList = ({userName, setAllProjectsArray, dataArray}) => {
@@ -22,6 +24,7 @@ const ProjectList = ({userName, setAllProjectsArray, dataArray}) => {
     let project_ids_temp = new Array()
 
     const fetchData_IDs = async () =>{
+        //Because backend returns a list of ids instead of the project data, have to make an API call for each project to get the data
         for(let i = 0; i < dataArray.length; i++){
             console.log(dataArray)
             let id = dataArray[i]
@@ -33,12 +36,17 @@ const ProjectList = ({userName, setAllProjectsArray, dataArray}) => {
         }
         setProject_names(project_names_temp)
     }
+    /*
+      Makes it so that it fetchData_IDs only gets called when dataArray changes, otherwise it gets stuck in an infinite loop
+      dataArray will be changed by joinProjectFields, deleteProjectFields, and createProjectFields
+    */
     useEffect(()=>{fetchData_IDs()},[dataArray])
 
     return(
         <Paper elevation={3} sx={{margin : 5}}>
             <List>
-                {project_names.map((project_name, i) => { 
+                {//creates a new list item for every project that the user is linked to. Gets updated when project_names is updated, which happens when dataArray is updated
+                project_names.map((project_name, i) => { 
                     return(
                         <div key={project_ids[i]}>
                             <ListItem key={project_ids[i]}>

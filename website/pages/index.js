@@ -1,5 +1,9 @@
 import { getSession } from "next-auth/react";
 
+/*
+The landing page of the website. If the user is not logged in, they are redirected to the signin page,
+and if they are logged in, they are redirected to the resources page.
+*/
 export default function Home() {
   return <div></div>;
 }

@@ -11,6 +11,15 @@ import SelectHWSet from "../components/selectHwset";
 import CheckResources from "../components/checkResources";
 import { useState } from "react";
 
+/*
+Code for the stepper component for checking-in or checking out resources in the resources page.
+Consists of three steps: 
+  1. selecting a project (selectProject component)
+  2. selecting a HWSet (selectHwset component)
+  3. selecting whether to check-in or out, and the amount (checkResources component)
+hwsets and setHwsets props are passed to update the resource table without having to refresh the page
+*/
+
 const ResourceStepper = (props) => {
   const { hwsets, setHwsets } = props;
 
@@ -65,6 +74,8 @@ const ResourceStepper = (props) => {
 
   const handleNext = async () => {
     setError(false);
+
+    // on each step, if a selection hasn't been made, set error to true to display error messages
     if (activeStep === 0 && !project.projectName) {
       setError(true);
       return;
@@ -92,10 +103,14 @@ const ResourceStepper = (props) => {
           }
           return response.text();
         });
+
+        //It will only return a string if there is an error with the API call, with the string having the error message sent by the backend
         if (typeof res === "string") {
           setError(res);
           return;
         }
+
+        // Update the resource table by updating the hwsets props
         await fetch("http://127.0.0.1:5000/HWSets")
           .then((response) => response.json())
           .then((data) => setHwsets(data.result));
@@ -104,10 +119,12 @@ const ResourceStepper = (props) => {
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
   };
 
+  // Go back a step
   const handleBack = () => {
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
   };
 
+  // Go to the first step and reset all fields
   const handleReset = () => {
     setProject({ projectName: "" });
 
@@ -155,18 +172,21 @@ const ResourceStepper = (props) => {
             </Step>
           ))}
         </Stepper>
-        {activeStep === steps.length && (
-          <Paper square elevation={0} sx={{ p: 3 }}>
-            <Typography>
-              {project.projectName} successfully checked{" "}
-              {check.checkIn > 0 ? "in" : "out"} {check.number} resources from{" "}
-              {hwset.name}
-            </Typography>
-            <Button onClick={handleReset} sx={{ mt: 1, mr: 1 }}>
-              Reset
-            </Button>
-          </Paper>
-        )}
+        {
+          // If checking is successful, display the project, HWSet, operation, and amount of resources
+          activeStep === steps.length && (
+            <Paper square elevation={0} sx={{ p: 3 }}>
+              <Typography>
+                {project.projectName} successfully checked{" "}
+                {check.checkIn > 0 ? "in" : "out"} {check.number} resources from{" "}
+                {hwset.name}
+              </Typography>
+              <Button onClick={handleReset} sx={{ mt: 1, mr: 1 }}>
+                Reset
+              </Button>
+            </Paper>
+          )
+        }
       </Paper>
     </Box>
   );

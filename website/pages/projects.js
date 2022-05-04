@@ -10,6 +10,11 @@ import Paper from '@mui/material/Paper'
 import { getSession } from 'next-auth/react'
 import Box from "@mui/material/Box";
 
+
+/*
+Code for the projects page
+*/
+
 export default function Home({user, dataArray}){
 
   const [data, setData] = useState(dataArray)
@@ -54,6 +59,8 @@ export async function getServerSideProps(context) {
     method: 'GET',
     headers: { 'Content-Type': 'application/json' },
 };
+//Only gets called when the page is loaded for the first time/page is refreshed
+//data is an array of project ids
   let res = await fetch('http://127.0.0.1:5000/Users/get-projects?userName=' + userName, requestOptions) 
   let data = await res.json()
 

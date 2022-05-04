@@ -3,6 +3,11 @@ import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 
+/*
+Code for selecting which HWSet from which to check in/out resources in the resource stepper component.
+hwsets is the list of all HWSets, and setHwset is called when a HWSet from this list is selected
+*/
+
 const SelectHWSet = (props) => {
   const { hwsets, hwset, setHwset, error } = props;
 
@@ -24,13 +29,16 @@ const SelectHWSet = (props) => {
           onChange={handleChange}
           defaultValue=""
         >
-          {hwsets.map((hwset, i) => {
-            return (
-              <MenuItem key={hwset.name} value={hwset}>
-                {hwset.name}
-              </MenuItem>
-            );
-          })}
+          {
+            // Display a list of all HWSets in the Select component
+            hwsets.map((hwset, i) => {
+              return (
+                <MenuItem key={hwset.name} value={hwset}>
+                  {hwset.name}
+                </MenuItem>
+              );
+            })
+          }
         </Select>
       </FormControl>
     </div>

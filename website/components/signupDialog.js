@@ -5,6 +5,11 @@ import { signIn } from "next-auth/react";
 import { useState } from "react";
 import SigninForm from "./signinForm";
 
+/*
+Code for the Dialog component that pops up for signing up.
+open and onClose props are passed to display the Dialog when it is open and handle what happens when it is closed
+*/
+
 const Signup = (props) => {
   const [emptyFields, setEmptyFields] = useState(false);
 
@@ -16,11 +21,13 @@ const Signup = (props) => {
     const username = data.get("username");
     const password = data.get("password");
 
+    // If either field is empty, set emptyFields to highlight empty text boxes
     if (!username || !password) {
       setEmptyFields(true);
       return;
     }
 
+    // Call the signup API located in pages/api/auth/[...nextauth].js
     await signIn("signup", {
       callbackUrl: `${window.location.origin}/resources`,
       username: username,

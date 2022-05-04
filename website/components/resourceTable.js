@@ -7,9 +7,13 @@ import TableRow from "@mui/material/TableRow";
 import Typography from "@mui/material/Typography";
 import Paper from "@mui/material/Paper";
 import Alert from "@mui/material/Alert";
-import Button from "@mui/material/Button";
 import { useState, useEffect } from "react";
 import CreateResource from "../components/createResource";
+
+/*
+Code for the resource table in the resources page.
+setHwsets updates the list of HWSets on the initial rendering of the page
+*/
 
 const ResourceTable = (props) => {
   const { hwsets, setHwsets } = props;
@@ -21,6 +25,9 @@ const ResourceTable = (props) => {
       .then((data) => setHwsets(data.result));
   };
 
+  /*
+  Get the list of HWSets on the first rendering of the page
+  */
   useEffect(() => {
     initHWSets();
   }, []);
@@ -33,6 +40,7 @@ const ResourceTable = (props) => {
     const name = data.get("name");
     const capacity = data.get("capacity");
 
+    // If either field is empty, set error prop to true to highlight empty fields and do not call the API
     if (!name || !capacity) {
       setError(true);
       return;
@@ -49,22 +57,13 @@ const ResourceTable = (props) => {
         return response.text();
       })
       .then((data) => {
+        //It will only return a string if there is an error with the API call, with the string having the error message sent by the backend
         if (typeof data === "string") {
           setError(data);
         } else {
           setHwsets([...hwsets, data.result]);
         }
       });
-  };
-
-  const deleteHwset = async (i, name) => {
-    let newArr = [...hwsets];
-    newArr.splice(i, 1);
-    setHwsets(newArr);
-
-    await fetch("http://127.0.0.1:5000/HWSets?name=" + name, {
-      method: "DELETE",
-    });
   };
 
   return (
@@ -89,14 +88,6 @@ const ResourceTable = (props) => {
                   <TableCell>{row.name}</TableCell>
                   <TableCell>{row.capacity}</TableCell>
                   <TableCell>{row.availability}</TableCell>
-                  <TableCell>
-                    <Button
-                      variant="contained"
-                      onClick={() => deleteHwset(i, row.name)}
-                    >
-                      Delete {row.name}
-                    </Button>
-                  </TableCell>
                 </TableRow>
               );
             })}
@@ -104,7 +95,10 @@ const ResourceTable = (props) => {
           </TableBody>
         </Table>
       </TableContainer>
-      {typeof error === "string" && <Alert severity="error">{error}</Alert>}
+      {
+        // Display an error message if the HWSet already exists
+        typeof error === "string" && <Alert severity="error">{error}</Alert>
+      }
     </Paper>
   );
 };

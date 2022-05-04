@@ -16,6 +16,12 @@ import Alert from "@mui/material/Alert";
 import { useState } from "react";
 
 
+/*
+Code for the delete project widget in the projects page
+setAllProjectsArray updates the list of projects that the user is linked to. It is passed so that the list is updated without the need for 
+the user to refresh the page. 
+*/ 
+
 const InputFieldsDelete = ({allProjectsArray, setAllProjectsArray, userName}) => {
 
     const [error, setError] = useState(false)
@@ -38,7 +44,7 @@ const InputFieldsDelete = ({allProjectsArray, setAllProjectsArray, userName}) =>
         const data = await res.json()
         setAllProjectsArray(data)
       }
-      
+      //This is needed for the Minimalist UI hooks
       const theme = createTheme()
 
       const deleteProjects = async(url) => {
@@ -51,12 +57,13 @@ const InputFieldsDelete = ({allProjectsArray, setAllProjectsArray, userName}) =>
         if (response.ok) {
           setError(false)
           setSuccess(true)
+          //gets called inside this function so that it waits for the list of project associated with the user to be up to date in the backend
           updateAllProjects()
           return response.json();
         }
         return response.text();
       });
-
+      //It will only return a string if there is an error with the API call, with the string having the error message sent by the backend
       if(typeof req === "string"){
           setError(true)
           setSuccess(false)

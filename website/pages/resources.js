@@ -4,6 +4,10 @@ import ResourceTable from "../components/resourceTable";
 import { getSession } from "next-auth/react";
 import { useState } from "react";
 
+/* 
+Code for the resources page
+*/
+
 export default function Home() {
   const [hwsets, setHwsets] = useState([]);
 
