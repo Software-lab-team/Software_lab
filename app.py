@@ -5,6 +5,7 @@ from Users import Users
 from Datasets import Datasets
 from flask_cors import CORS,cross_origin
 
+# Initialize the application, add CORS middleware so the front-end can communicate with the back-end
 app = Flask(__name__)
 CORS(app)
 app.register_blueprint(HWSets)
