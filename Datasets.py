@@ -11,11 +11,11 @@ Datasets = Blueprint("Datasets", __name__)
 def get_circor():
     file_list = ['training_data/13918_AV.hea']
     cwd = os.getcwd()
-    dl_dir = os.path.join(cwd, 'tmp_dl_dir')
-    wfdb.dl_files('circor-heart-sound', dl_dir, file_list)
-    record = wfdb.rdheader('tmp_dl_dir/training_data/13918_AV') 
-    shutil.rmtree(dl_dir)
-    return json.dumps(record.__dict__, indent=4, sort_keys=True, default=str)
+    dl_dir = os.path.join(cwd, 'tmp_dl_dir') # create a temp folder
+    wfdb.dl_files('circor-heart-sound', dl_dir, file_list) # download files from physioner
+    record = wfdb.rdheader('tmp_dl_dir/training_data/13918_AV') # read the metadata from the downloaded file
+    shutil.rmtree(dl_dir) # delete the local temp folder
+    return json.dumps(record.__dict__, indent=4, sort_keys=True, default=str) # return the metadata in json format
 
 # https://physionet.org/content/taichidb/1.0.2/
 def get_taichi():
